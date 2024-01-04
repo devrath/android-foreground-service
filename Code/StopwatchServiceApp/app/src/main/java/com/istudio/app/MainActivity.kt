@@ -1,88 +1,76 @@
 package com.istudio.app
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.istudio.app.service.StopwatchService
 import com.istudio.app.ui.theme.StopWatchServiceAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private var isBound by mutableStateOf(false)
+    private lateinit var stopwatchService: StopwatchService
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as StopwatchService.StopwatchBinder
+            stopwatchService = binder.getService()
+            isBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            isBound = false
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, StopwatchService::class.java).also { intent ->
+            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (Build.VERSION.SDK_INT >= (Build.VERSION_CODES.TIRAMISU)) {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0
-            )
-        }
-
         setContent {
             StopWatchServiceAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    CurrentScreen()
+                if (isBound) {
+                    MainScreen(stopwatchService = stopwatchService)
                 }
             }
         }
+        requestPermissions(Manifest.permission.POST_NOTIFICATIONS)
     }
-}
 
-
-@Composable
-fun CurrentScreen() {
-
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(onClick = {
-            Intent(context,StopwatchService::class.java).also {
-                it.action = StopwatchService.Actions.START.toString()
-                context.startService(it)
+    private fun requestPermissions(vararg permissions: String) {
+        val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { result ->
+            result.entries.forEach {
+                Log.d("MainActivity", "${it.key} = ${it.value}")
             }
-        }) {
-            Text(text = "Start Service")
         }
-        Button(onClick = {
-            Intent(context,StopwatchService::class.java).also {
-                it.action = StopwatchService.Actions.STOP.toString()
-                context.startService(it)
-            }
-        }) {
-            Text(text = "Stop Service")
-        }
+        requestPermissionLauncher.launch(permissions.asList().toTypedArray())
     }
-}
 
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    StopWatchServiceAppTheme {
-        CurrentScreen()
+    override fun onStop() {
+        super.onStop()
+        unbindService(connection)
+        isBound = false
     }
 }
