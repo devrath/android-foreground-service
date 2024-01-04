@@ -2,7 +2,6 @@ package com.istudio.app
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.getValue
@@ -13,11 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.with
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.istudio.app.service.ServiceHelper
 import com.istudio.app.service.StopwatchService
+import com.istudio.app.ui.composables.AppText
 import com.istudio.app.util.Constants.ACTION_SERVICE_CANCEL
 import com.istudio.app.util.Constants.ACTION_SERVICE_START
 import com.istudio.app.util.Constants.ACTION_SERVICE_STOP
@@ -34,11 +30,17 @@ import com.istudio.app.util.StopwatchState
 @ExperimentalAnimationApi
 @Composable
 fun MainScreen(stopwatchService: StopwatchService) {
+
+    // Context
     val context = LocalContext.current
+    // Service state
+    val currentState by stopwatchService.currentState
+
+    // <-------------- Time states -------------->
     val hours by stopwatchService.hours
     val minutes by stopwatchService.minutes
     val seconds by stopwatchService.seconds
-    val currentState by stopwatchService.currentState
+    // <-------------- Time states -------------->
 
     Column(
         modifier = Modifier
@@ -48,39 +50,16 @@ fun MainScreen(stopwatchService: StopwatchService) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+        Row(
             modifier = Modifier.weight(weight = 9f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedContent(targetState = hours, transitionSpec = { addAnimation() }, label = "") {
-                Text(
-                    text = hours,
-                    style = TextStyle(
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        color = if (hours == "00") Color.White else Color.Blue
-                    )
-                )
-            }
-            AnimatedContent(targetState = minutes, transitionSpec = { addAnimation() }, label = "") {
-                Text(
-                    text = minutes, style = TextStyle(
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        color = if (hours == "00") Color.White else Color.Blue
-                    )
-                )
-            }
-            AnimatedContent(targetState = seconds, transitionSpec = { addAnimation() }, label = "") {
-                Text(
-                    text = seconds, style = TextStyle(
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        color = if (hours == "00") Color.White else Color.Blue
-                    )
-                )
-            }
+            AppText(text = hours)
+            AppText(text = " : ")
+            AppText(text = minutes)
+            AppText(text = " : ")
+            AppText(text = seconds)
         }
         Row(modifier = Modifier.weight(weight = 1f)) {
             Button(
@@ -121,13 +100,4 @@ fun MainScreen(stopwatchService: StopwatchService) {
             }
         }
     }
-}
-
-@ExperimentalAnimationApi
-fun addAnimation(duration: Int = 600): ContentTransform {
-    return slideInVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeIn(
-        animationSpec = tween(durationMillis = duration)
-    ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeOut(
-        animationSpec = tween(durationMillis = duration)
-    )
 }
