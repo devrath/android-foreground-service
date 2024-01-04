@@ -3,8 +3,10 @@ package com.istudio.app.di
 
 import android.app.NotificationManager
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.NotificationCompat
 import com.istudio.app.R
+import com.istudio.app.service.ServiceHelper
 import com.istudio.app.util.Constants.NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
@@ -17,6 +19,7 @@ import dagger.hilt.android.scopes.ServiceScoped
 @InstallIn(ServiceComponent::class)
 object NotificationModule {
 
+    @OptIn(ExperimentalAnimationApi::class)
     @ServiceScoped
     @Provides
     fun provideNotificationBuilder(
@@ -27,9 +30,9 @@ object NotificationModule {
             .setContentText("00:00:00")
             .setSmallIcon(R.drawable.ic_baseline_timer_24)
             .setOngoing(true)
-            //.addAction(0, "Stop", ServiceHelper.stopPendingIntent(context))
-            //.addAction(0, "Cancel", ServiceHelper.cancelPendingIntent(context))
-            //.setContentIntent(ServiceHelper.clickPendingIntent(context))
+            .addAction(0, "Stop", ServiceHelper.stopPendingIntent(context))
+            .addAction(0, "Cancel", ServiceHelper.cancelPendingIntent(context))
+            .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }
 
     @ServiceScoped
