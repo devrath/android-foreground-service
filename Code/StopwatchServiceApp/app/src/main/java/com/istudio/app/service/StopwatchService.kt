@@ -59,20 +59,30 @@ class StopwatchService : Service() {
      * This method is triggered when another android component sends intent to the running service
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        handleIntent(intent)
+        return super.onStartCommand(intent, flags, startId)
+    }
 
-        when (intent?.getStringExtra(STOPWATCH_STATE)) {
-            ServiceHelper.StopwatchState.Started.name -> start()
-            ServiceHelper.StopwatchState.Stopped.name -> stop()
-            ServiceHelper.StopwatchState.Canceled.name -> cancel()
-        }
-        intent?.action.let {
-            when (it) {
-                ACTION_SERVICE_START ->  start()
-                ACTION_SERVICE_STOP ->  stop()
-                ACTION_SERVICE_CANCEL -> cancel()
+    private fun handleIntent(intent: Intent?) {
+        intent?.let {
+            it.getStringExtra(STOPWATCH_STATE)?.let { stringExtra ->
+                // Notification click action handling
+                when (stringExtra) {
+                    ServiceHelper.StopwatchState.Started.name -> start()
+                    ServiceHelper.StopwatchState.Stopped.name -> stop()
+                    ServiceHelper.StopwatchState.Canceled.name -> cancel()
+                }
+            }
+
+            it.action?.let { action ->
+                // Button on-click flow action handling
+                when (action) {
+                    ACTION_SERVICE_START -> start()
+                    ACTION_SERVICE_STOP -> stop()
+                    ACTION_SERVICE_CANCEL -> cancel()
+                }
             }
         }
-        return super.onStartCommand(intent, flags, startId)
     }
 
     /** ********************** MAIN SERVICE ACTIONS *************** **/
