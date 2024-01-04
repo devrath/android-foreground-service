@@ -23,7 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 /**
  * 1) Why we have used bound service ?
  * --> We have used bound service because, When application is destroyed & recreated when we start timer and kill activity. Once we reopen app, it has to be updated so bound service helps us achieve it.
- *
+ * *
+ * 2) Will the service is destroyed if the bound components are destroyed
+ * --> If you start a service and bind it, The service will continue to run even if the bound component are destroyed unless you call stopSelf
+ * --> Using this we can achieve the functionality of indefinitely running the timer even if the user leaves the screen and gain control once user comes back to the screen
  */
 
 @OptIn(ExperimentalAnimationApi::class)
