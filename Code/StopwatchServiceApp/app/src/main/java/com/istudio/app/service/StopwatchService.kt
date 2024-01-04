@@ -7,11 +7,9 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
-import android.os.IBinder
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
-import com.istudio.app.R
 import com.istudio.app.util.Constants.ACTION_SERVICE_CANCEL
 import com.istudio.app.util.Constants.ACTION_SERVICE_START
 import com.istudio.app.util.Constants.ACTION_SERVICE_STOP
