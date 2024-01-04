@@ -6,12 +6,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.istudio.app.MainActivity
+import com.istudio.app.util.Constants
 import com.istudio.app.util.Constants.CANCEL_REQUEST_CODE
 import com.istudio.app.util.Constants.CLICK_REQUEST_CODE
 import com.istudio.app.util.Constants.RESUME_REQUEST_CODE
 import com.istudio.app.util.Constants.STOPWATCH_STATE
 import com.istudio.app.util.Constants.STOP_REQUEST_CODE
-import com.istudio.app.util.StopwatchState
 
 @ExperimentalAnimationApi
 object ServiceHelper {
@@ -22,6 +22,7 @@ object ServiceHelper {
         else
             0
 
+    /** ************************ Pending Intents  ************************ **/
     fun clickPendingIntent(context: Context): PendingIntent {
         val clickIntent = Intent(context, MainActivity::class.java).apply {
             putExtra(STOPWATCH_STATE, StopwatchState.Started.name)
@@ -57,11 +58,69 @@ object ServiceHelper {
             context, CANCEL_REQUEST_CODE, cancelIntent, flag
         )
     }
+    /** ************************ Pending Intents  ************************ **/
 
-    fun triggerForegroundService(context: Context, action: String) {
+    fun toggleLeftButtonAction(currentState: StopwatchState): String {
+        if (currentState == StopwatchState.Started){
+            // If the service is already in started state --> Stop it
+            return Constants.ACTION_SERVICE_STOP
+        }else{
+            // If the service is in stopped/resume state --> Start it
+            return Constants.ACTION_SERVICE_START
+        }
+    }
+
+    fun leftButtonText(currentState: StopwatchState): String {
+        when (currentState) {
+            StopwatchState.Started -> {
+                // If the current service state is started ---> Display "Stop" text
+                return "Stop"
+            }
+            StopwatchState.Stopped -> {
+                // If the current service state is stopped ---> Display "Resume" text
+                return "Resume"
+            }
+            else -> {
+                // Else display "Start" text
+                return "Start"
+            }
+        }
+    }
+
+
+    /** ************************ Service triggers  ************************ **/
+
+    /** ************ Actions  ************ **/
+    fun leftButtonAction(
+        context: Context,
+        currentState: StopwatchState
+    ) {
+        triggerForegroundService(
+            context = context,
+            action = toggleLeftButtonAction(currentState)
+        )
+    }
+
+    fun rightButtonAction(context: Context) {
+        triggerForegroundService(
+            context = context,
+            action = Constants.ACTION_SERVICE_CANCEL
+        )
+    }
+    /** ************ Actions  ************ **/
+
+    private fun triggerForegroundService(context: Context, action: String) {
         Intent(context, StopwatchService::class.java).apply {
             this.action = action
             context.startService(this)
         }
     }
+
+    /** ************************ Service triggers  ************************ **/
+
+
+    enum class StopwatchState {
+        Idle, Started, Stopped, Canceled
+    }
+
 }

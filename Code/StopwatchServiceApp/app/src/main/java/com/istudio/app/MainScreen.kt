@@ -12,13 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.istudio.app.service.ServiceHelper
+import com.istudio.app.service.ServiceHelper.leftButtonAction
+import com.istudio.app.service.ServiceHelper.leftButtonText
+import com.istudio.app.service.ServiceHelper.rightButtonAction
 import com.istudio.app.service.StopwatchService
 import com.istudio.app.ui.composables.AppButton
 import com.istudio.app.ui.composables.AppText
-import com.istudio.app.util.Constants.ACTION_SERVICE_CANCEL
-import com.istudio.app.util.Constants.ACTION_SERVICE_START
-import com.istudio.app.util.Constants.ACTION_SERVICE_STOP
-import com.istudio.app.util.StopwatchState
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalAnimationApi
@@ -35,6 +34,8 @@ fun MainScreen(stopwatchService: StopwatchService) {
     val minutes by stopwatchService.minutes
     val seconds by stopwatchService.seconds
     // <-------------- Time states -------------->
+
+    val isRightActionEnabled = seconds != "00" && currentState != ServiceHelper.StopwatchState.Started
 
     Column(
         modifier = Modifier
@@ -56,39 +57,25 @@ fun MainScreen(stopwatchService: StopwatchService) {
             AppText(text = seconds)
         }
         Row(modifier = Modifier.weight(weight = 1f)) {
+
+            val buttonModifier = Modifier.weight(1f).fillMaxHeight(0.8f)
+
             AppButton(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(0.8f),
-                text = leftButtonTextAction(currentState),
-                onClick = {
-                    ServiceHelper.triggerForegroundService(
-                        context = context,
-                        action = if (currentState == StopwatchState.Started) ACTION_SERVICE_STOP
-                        else ACTION_SERVICE_START
-                    )
-                })
+                modifier = buttonModifier,
+                text = leftButtonText(currentState),
+                onClick = { leftButtonAction(context, currentState) }
+            )
 
             Spacer(modifier = Modifier.width(30.dp))
 
             AppButton(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(0.8f),
-                enabled = seconds != "00" && currentState != StopwatchState.Started,
+                modifier = buttonModifier,
+                enabled = isRightActionEnabled,
                 text = "Cancel",
                 onClick = {
-                    ServiceHelper.triggerForegroundService(
-                        context = context, action = ACTION_SERVICE_CANCEL
-                    )
+                    rightButtonAction(context)
                 },
             )
         }
     }
 }
-
-@Composable
-private fun leftButtonTextAction(currentState: StopwatchState) =
-    if (currentState == StopwatchState.Started) "Stop"
-    else if ((currentState == StopwatchState.Stopped)) "Resume"
-    else "Start"
