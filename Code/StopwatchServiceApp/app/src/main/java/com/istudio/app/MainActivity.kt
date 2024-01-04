@@ -65,7 +65,7 @@ fun CurrentScreen() {
                 context.startService(it)
             }
         }) {
-            Text(text = "Start run")
+            Text(text = "Start Service")
         }
         Button(onClick = {
             Intent(context,StopwatchService::class.java).also {
@@ -73,7 +73,7 @@ fun CurrentScreen() {
                 context.startService(it)
             }
         }) {
-            Text(text = "Stop run")
+            Text(text = "Stop Service")
         }
     }
 }

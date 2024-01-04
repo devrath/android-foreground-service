@@ -10,13 +10,9 @@ import com.istudio.app.util.Constants.NOTIFICATION_ID
 
 class StopwatchService : Service() {
 
-    companion object {
-    }
-
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-
 
     /**
      * This method is triggered when another android component sends intent to the running service
@@ -39,7 +35,7 @@ class StopwatchService : Service() {
         val notification = NotificationCompat
             .Builder(this,NOTIFICATION_CHANNEL_ID).setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Stop Watch")
-            .setContentText("Timer running : 00:50")
+            .setContentText("Content of the notification")
             .build()
 
         startForeground(NOTIFICATION_ID,notification)
