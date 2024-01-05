@@ -42,12 +42,177 @@
 </div>
 
 
-
-
 ### `Starting service from background` 
 * Apps that target Android 12 or higher can't start foreground services while the app is running in the background, except for a few special cases. 
 * If an app tries to start a foreground service while the app runs in the background, and the foreground service doesn't satisfy one of the exceptional cases, the system throws a `ForegroundServiceStartNotAllowedException`.
 
+### `Creating a simple foreground service`
+
+<div align="center">
+
+| `Contents` |
+| ---------- |
+| [`Define the constants needed`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-constants-needed) |
+| [`Create a service class`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#create-a-service-class) |
+| [`Define the channel creation`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-channel-creation) |
+| [`Define the runtime permission`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-runtime-permission) |
+| [`Define the permissions in the manifest`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-runtime-permission) |
+| [`Declare the service tag in the manifest`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#declare-the-service-tag-in-the-manifest) |
+| [`Initiate start and stop actions from your UI`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#initiate-start-and-stop-actions-from-your-ui) |
+
+</div>
+
+
+
+
+## `Define the constants needed`
+```kotlin
+object Constants {
+    const val NOTIFICATION_CHANNEL_ID = "STOPWATCH_NOTIFICATION_ID"
+    const val NOTIFICATION_CHANNEL_NAME = "STOPWATCH_NOTIFICATION"
+    const val NOTIFICATION_ID = 10
+}
+```
+
+## `Create a service class`
+```kotlin
+class StopwatchService : Service() {
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    /**
+     * This method is triggered when another Android component sends the intent to the running service
+     */
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        when(intent?.action){
+            Actions.START.toString() ->{
+                start()
+            }
+            Actions.STOP.toString() ->{
+                stopSelf()
+            }
+        }
+
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun start() {
+        val notification = NotificationCompat
+            .Builder(this,NOTIFICATION_CHANNEL_ID).setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Stop Watch")
+            .setContentText("Content of the notification")
+            .build()
+
+        startForeground(NOTIFICATION_ID,notification)
+    }
+
+
+    enum class Actions{
+        START, STOP
+    }
+
+}
+```
+
+## `Define the channel creation`
+**MyApplication.kt**
+```kotlin
+class MyApplication: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        if(Build.VERSION.SDK_INT >= (Build.VERSION_CODES.O)){
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME ,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+}
+```
+
+## `Define the runtime permission`
+```kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= (Build.VERSION_CODES.TIRAMISU)) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0
+            )
+        }
+        setContent {
+            // Content
+        }
+    }
+}
+```
+
+## `Define the permissions in the manifest`
+```xml
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+```
+
+## `Declare the service tag in the manifest`
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--- Define your permissions ---!>
+
+    <application
+        android:name=".MyApplication">
+      
+        <!-- Other codes -->
+
+        <service
+            android:name=".service.StopwatchService"
+            android:foregroundServiceType="shortService"
+            android:exported="false"/>
+
+    </application>
+
+</manifest>
+```
+
+## `Initiate start and stop actions from your UI`
+```kotlin
+@Composable
+fun CurrentScreen() {
+
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Button(onClick = {
+            Intent(context,StopwatchService::class.java).also {
+                it.action = StopwatchService.Actions.START.toString()
+                context.startService(it)
+            }
+        }) {
+            Text(text = "Start Service")
+        }
+        Button(onClick = {
+            Intent(context,StopwatchService::class.java).also {
+                it.action = StopwatchService.Actions.STOP.toString()
+                context.startService(it)
+            }
+        }) {
+            Text(text = "Stop Service")
+        }
+    }
+}
+```
 
 
 ## **`𝚂𝚞𝚙𝚙𝚘𝚛𝚝`** ☕
