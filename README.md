@@ -13,11 +13,25 @@
 
 | `𝙲𝙾𝙽𝚃𝙴𝙽𝚃𝚂` |
 | ---------- |
+| [`What is a foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
 | [`Creating a simple foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
 | [`Demo`](https://github.com/devrath/android-foreground-service/blob/main/README.md#demo) |
 | [`Starting service from background`](https://github.com/devrath/android-foreground-service?tab=readme-ov-file#starting-service-from-background) |
 
 </div>
+
+### `What is a foreground service`
+* In Android, a foreground service is a type of service that has a higher priority than regular background services.
+* It is designed to perform operations that are noticeable to the user, and its notification is shown to keep the user aware of ongoing tasks. When an app runs a foreground service, it is less likely to be killed by the system, even when resources are scarce.
+
+### `Where a foreground service is used`
+* Foreground services are often used for tasks that the user should be aware of and that have a visual or noticeable impact on the application. 
+* For example, when an app is playing music in the background, downloading files, or providing navigation instructions, it might use a foreground service to ensure that the user is aware of these activities.
+
+### `Why a foreground service is useful`
+* The notification associated with a foreground service serves as a persistent visual indicator to the user, informing them that the app is running a foreground service.
+* This helps users understand why certain operations are ongoing, even when the app is not in the foreground.
+* It ensures that the user is informed about ongoing activities that might affect their interaction with the app.
 
 ### `Demo`
 
