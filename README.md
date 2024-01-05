@@ -14,9 +14,9 @@
 | `𝙲𝙾𝙽𝚃𝙴𝙽𝚃𝚂` |
 | ---------- |
 | [`What is a foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
-| [`Creating a simple foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
 | [`Demo`](https://github.com/devrath/android-foreground-service/blob/main/README.md#demo) |
 | [`Starting service from background`](https://github.com/devrath/android-foreground-service?tab=readme-ov-file#starting-service-from-background) |
+| [`Creating a simple foreground service`](https://github.com/devrath/android-foreground-service/blob/main/README.md#creating-a-simple-foreground-service) |
 
 </div>
 
@@ -52,13 +52,13 @@
 
 | `Contents` |
 | ---------- |
-| [`Define the constants needed`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-constants-needed) |
-| [`Create a service class`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#create-a-service-class) |
-| [`Define the channel creation`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-channel-creation) |
-| [`Define the runtime permission`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-runtime-permission) |
-| [`Define the permissions in the manifest`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#define-the-runtime-permission) |
-| [`Declare the service tag in the manifest`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#declare-the-service-tag-in-the-manifest) |
-| [`Initiate start and stop actions from your UI`](https://github.com/devrath/AIDL-Connector/wiki/Creating-a-foreground-service#initiate-start-and-stop-actions-from-your-ui) |
+| [`Define the constants needed`](https://github.com/devrath/android-foreground-service/blob/main/README.md#define-the-constants-needed) |
+| [`Create a service class`](https://github.com/devrath/android-foreground-service/blob/main/README.md#create-a-service-class) |
+| [`Define the channel creation`](https://github.com/devrath/android-foreground-service/blob/main/README.md#define-the-channel-creation) |
+| [`Define the runtime permission`](https://github.com/devrath/android-foreground-service/blob/main/README.md#define-the-runtime-permission) |
+| [`Define the permissions in the manifest`](https://github.com/devrath/android-foreground-service/blob/main/README.md#define-the-permissions-in-the-manifest) |
+| [`Declare the service tag in the manifest`](https://github.com/devrath/android-foreground-service/blob/main/README.md#declare-the-service-tag-in-the-manifest) |
+| [`Initiate start and stop actions from your UI`](https://github.com/devrath/android-foreground-service/blob/main/README.md#initiate-start-and-stop-actions-from-your-ui) |
 
 </div>
 
