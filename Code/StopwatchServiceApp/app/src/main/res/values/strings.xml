@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">StopWatchServiceApp</string>
+    <string name="app_name">ForegroundServiceApp</string>
+    <string name="counter_initial_text">00:00:00</string>
+    <string name="str_start">Start</string>
+    <string name="str_stop">Stop</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="str_resume">Resume</string>
 </resources>

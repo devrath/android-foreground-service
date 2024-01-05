@@ -25,14 +25,26 @@ object NotificationModule {
     fun provideNotificationBuilder(
         @ApplicationContext context: Context
     ): NotificationCompat.Builder {
+
+        val resource = context.resources
+        // -------------> Strings
+        val title = resource.getString(R.string.app_name)
+        val strStop = resource.getString(R.string.str_stop)
+        val strCancel = resource.getString(R.string.str_cancel)
+        val strCounter = resource.getString(R.string.counter_initial_text)
+        // -------------> Intents
+        val stopIntent = ServiceHelper.stopPendingIntent(context)
+        val cancelIntent = ServiceHelper.cancelPendingIntent(context)
+        val clickActionIntent = ServiceHelper.clickPendingIntent(context)
+
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Stopwatch")
-            .setContentText("00:00:00")
+            .setContentTitle(title)
+            .setContentText(strCounter)
             .setSmallIcon(R.drawable.ic_baseline_timer_24)
             .setOngoing(true)
-            .addAction(0, "Stop", ServiceHelper.stopPendingIntent(context))
-            .addAction(0, "Cancel", ServiceHelper.cancelPendingIntent(context))
-            .setContentIntent(ServiceHelper.clickPendingIntent(context))
+            .addAction(0, strStop, stopIntent)
+            .addAction(0, strCancel,cancelIntent)
+            .setContentIntent(clickActionIntent)
     }
 
     @ServiceScoped

@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "StopWatchServiceApp"
+rootProject.name = "ForegroundServiceApp"
 include(":app")

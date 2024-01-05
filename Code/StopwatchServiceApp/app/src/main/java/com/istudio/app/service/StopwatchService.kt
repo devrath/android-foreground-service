@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.istudio.app.R
 import com.istudio.app.util.Constants.ACTION_SERVICE_CANCEL
 import com.istudio.app.util.Constants.ACTION_SERVICE_START
 import com.istudio.app.util.Constants.ACTION_SERVICE_STOP
@@ -178,7 +179,7 @@ class StopwatchService : Service() {
 
     private fun setStopButton() {
         val index = 0
-        val title = "Stop"
+        val title = baseContext.resources.getString(R.string.str_stop)
         val intent = ServiceHelper.stopPendingIntent(baseContext)
         val notification = NotificationCompat.Action(0, title,intent)
 
@@ -189,9 +190,8 @@ class StopwatchService : Service() {
 
 
     private fun setResumeButton() {
-
         val index = 0
-        val title = "Resume"
+        val title = baseContext.resources.getString(R.string.str_resume)
         val intent = ServiceHelper.resumePendingIntent(baseContext)
         val notification = NotificationCompat.Action(0, title,intent)
 
