@@ -14,11 +14,13 @@
 | `𝙲𝙾𝙽𝚃𝙴𝙽𝚃𝚂` |
 | ---------- |
 | [`Creating a simple foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
-| [`Starting service from background`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
+| [`Starting service from background`](https://github.com/devrath/android-foreground-service?tab=readme-ov-file#starting-service-from-background) |
 
 </div>
 
 ### `Starting service from background` 
+* Apps that target Android 12 or higher can't start foreground services while the app is running in the background, except for a few special cases. 
+* If an app tries to start a foreground service while the app runs in the background, and the foreground service doesn't satisfy one of the exceptional cases, the system throws a `ForegroundServiceStartNotAllowedException`.
 
 
 
