@@ -14,7 +14,7 @@
 | `𝙲𝙾𝙽𝚃𝙴𝙽𝚃𝚂` |
 | ---------- |
 | [`Creating a simple foreground service`](https://github.com/devrath/android-foreground-service/wiki/Creating-a-simple-foreground-service) |
-| [`Demo`]() |
+| [`Demo`](https://github.com/devrath/android-foreground-service/blob/main/README.md#demo) |
 | [`Starting service from background`](https://github.com/devrath/android-foreground-service?tab=readme-ov-file#starting-service-from-background) |
 
 </div>
